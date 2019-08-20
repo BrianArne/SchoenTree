@@ -1,13 +1,12 @@
 CXX = g++
 
-all: SchoenTree
+all: main
 
-SchoenTree: SchoenTree.o SchoenNode.o
-	$(CXX) -o SchoenTree SchoenTree.o
+main: SchoenTree.o main.o
+	$(CXX) -o main SchoenTree.o main.o
 
-SchoenTree.o: SchoenTree.cpp SchoenTree.h SchoenNode.h
+main.o: main.cpp
+	$(CXX) -c main.cpp
+
+SchoenTree.o: SchoenTree.cpp SchoenTree.h 
 	$(CXX) -c SchoenTree.cpp
-
-SchoenNode.o: SchoenNode.cpp SchoenNode.h
-	$(CXX) -c SchoenNode.cpp
-
