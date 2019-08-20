@@ -6,9 +6,9 @@ class SchoenNode{
 
     SchoenNode();
 
-    SchoenNode(const unsigned short val);
+    SchoenNode(const unsigned short& val);
 
-    SchoenNode(const unsigned short val, SchoenNode* left, SchoenNode* right);
+    SchoenNode(const unsigned short& val, SchoenNode* left, SchoenNode* right);
   
     /*
      * Returns the right neighbor node
@@ -23,6 +23,7 @@ class SchoenNode{
   private:
     SchoenNode* left_;
     SchoenNode* right_;
+    unsigned short val_;
 
 
 };
