@@ -2,8 +2,10 @@
 #include <iostream>
 #include <map>
 #include <stdlib.h>
+#include <limits>
+#include <string>
 
-typedef unsigned short usNum;
+typedef unsigned char usNum;
 typedef std::pair<usNum, usNum> schoenPair;
 
 
@@ -28,7 +30,8 @@ SchoenTree::SchoenTree(){
     }
   }
   memcpy(parent_row_, p_row, 15*sizeof(usNum));
-  generate_map();
+  generate_map(p_row, (usNum)sizeof(p_row)/sizeof(usNum));
+  generate_nmap();
 }
 
 /**
@@ -39,9 +42,18 @@ SchoenTree::SchoenTree(usNum* row){
 }
 
 /**
+ * Generates map of note values t note value index in parent_row_
+ */
+void SchoenTree::generate_map(const usNum* row, usNum size){
+  for (usNum i = 0; i < size; i++){
+    map_.insert(std::pair<usNum, usNum>(row[i], i));
+  }
+}
+
+/**
  * Generates all neighbors for each index of the SchoenTree
  */
-void SchoenTree::generate_map(){
+void SchoenTree::generate_nmap(){
   schoenPair zero(1, 2);
   schoenPair one(3, 4);
   schoenPair two(4, 5);
@@ -80,10 +92,23 @@ usNum* SchoenTree::get_parent_row(){
 }
 
 /**
- * Generates all paths. Called by constructor at time of initialization
+ * Generates depth-first traversal from note to leaf notes paths. 
  */
-void SchoenTree::generate_paths(){
-  //Needs imp
+void SchoenTree::depth_path(const usNum& note){
+  usNum index = note_index(note);
+  if(index > 9 && index < 16){
+    std::cout << +note << " " << std::endl;
+    return;
+  }else{
+    std::cout << +note << " " << std::endl;
+    if(index < 16){
+      usNum left = get_lneighbor(index);
+      usNum right = get_rneighbor(index);
+      depth_path(get_note(left));
+      depth_path(get_note(right));
+    }
+  }
+  return;
 }
 
 /**
@@ -103,33 +128,40 @@ usNum SchoenTree::get_lneighbor(const usNum& index){
 }
 
 /**
+ * Returns the array index in parent_row_ of the note value
+ */
+usNum SchoenTree::note_index(const usNum& note){
+  return map_[note];
+}
+
+/**
  * Prints the tree to std::cout
  */
 void SchoenTree::print_tree(){
 
   std::cout << "        " 
-     << parent_row_[0] <<  std::endl;
+     << +parent_row_[0] <<  std::endl;
 
   std::cout << "      " 
-     << parent_row_[1] << "   " 
-     << parent_row_[2] << std::endl;
+     << +parent_row_[1] << "   " 
+     << +parent_row_[2] << std::endl;
 
   std::cout << "    " 
-    << parent_row_[3] << "   " 
-    << parent_row_[4] << "   "
-    << parent_row_[5]<<  std::endl;
+    << +parent_row_[3] << "   " 
+    << +parent_row_[4] << "   "
+    << +parent_row_[5]<<  std::endl;
 
   std::cout << "  "
-    << parent_row_[6] <<  "   " 
-    << parent_row_[7] << "   " 
-    << parent_row_[8] << "   " 
-    << parent_row_[9] << std::endl;
+    << +parent_row_[6] <<  "   " 
+    << +parent_row_[7] << "   " 
+    << +parent_row_[8] << "   " 
+    << +parent_row_[9] << std::endl;
 
   std::cout << "" 
-    << parent_row_[10] << "   " 
-    << parent_row_[11] << "   " 
-    << parent_row_[12] << "   " 
-    << parent_row_[13] << "   " 
-    << parent_row_[14] <<  std::endl;
+    << +parent_row_[10] << "   " 
+    << +parent_row_[11] << "   " 
+    << +parent_row_[12] << "   " 
+    << +parent_row_[13] << "   " 
+    << +parent_row_[14] <<  std::endl;
 }
 

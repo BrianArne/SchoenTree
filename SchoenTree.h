@@ -2,8 +2,9 @@
 #define SchoenTree_H
 #include <map>
 #include <utility>
+#include <string>
 
-typedef unsigned short usNum;
+typedef unsigned char usNum;
 typedef std::pair<usNum, usNum> schoenPair;
 
 class SchoenTree{
@@ -42,27 +43,38 @@ class SchoenTree{
     usNum get_lneighbor(const usNum& index);
 
     /**
+     * Returns the array index in parent_row_ of the note value
+     */
+    usNum note_index(const usNum& note);
+
+    /**
      * Prints the tree
      */
     void print_tree();
+
+    /**
+     * Generates depth-first traversal from @param note to leaf notes
+     */
+    void depth_path(const usNum& note);
 
     
   private:
 
     /**
-     * Returns a vector of possible depth first paths through SchoenTree
+     * Generates map of note values to note value index in parent_row_
      */
-    void generate_paths();
+    void generate_map(const usNum* row, usNum size);
 
     /**
      * Creates map of all indexes and it's neighbors
      */
-    void generate_map();
+    void generate_nmap();
 
     //void generate_neighbors();
     
     usNum parent_row_[15];
     std::map<usNum, schoenPair> neighbor_map_;
+    std::map<usNum, usNum> map_;
 
 };
 
