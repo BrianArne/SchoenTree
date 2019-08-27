@@ -55,8 +55,8 @@ class SchoenTree{
     /**
      * Generates depth-first traversal from @param note to leaf notes
      */
-    void depth_path(const usNum& note);
-
+    void depth_path(usNum& note, 
+                    std::vector<usNum>* vec = nullptr);
     
   private:
 

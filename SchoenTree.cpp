@@ -2,8 +2,10 @@
 #include <iostream>
 #include <map>
 #include <stdlib.h>
+#include <cstring>
 #include <limits>
 #include <string>
+#include <vector>
 
 typedef unsigned char usNum;
 typedef std::pair<usNum, usNum> schoenPair;
@@ -18,7 +20,7 @@ SchoenTree::SchoenTree(){
   bool zero = false;
   usNum zVal = 0;
   for( int i = 0; i < (sizeof(p_row) / sizeof(usNum)); i++){
-    usNum val = std::rand() % 15;
+    usNum val = rand() % 15;
     if (!zero){
       zero = true;
       p_row[val] = i;
@@ -29,7 +31,7 @@ SchoenTree::SchoenTree(){
       i--;
     }
   }
-  memcpy(parent_row_, p_row, 15*sizeof(usNum));
+  std::memcpy(parent_row_, p_row, 15*sizeof(usNum));
   generate_map(p_row, (usNum)sizeof(p_row)/sizeof(usNum));
   generate_nmap();
 }
@@ -38,7 +40,7 @@ SchoenTree::SchoenTree(){
  * Constructs SchoenTree from supplied parent row
  */
 SchoenTree::SchoenTree(usNum* row){
-  memcpy(parent_row_, row, 15 * sizeof(usNum));
+  std::memcpy(parent_row_, row, 15 * sizeof(usNum));
 }
 
 /**
@@ -94,21 +96,31 @@ usNum* SchoenTree::get_parent_row(){
 /**
  * Generates depth-first traversal from note to leaf notes paths. 
  */
-void SchoenTree::depth_path(const usNum& note){
+void SchoenTree::depth_path(usNum& note, 
+                            std::vector<usNum>* vec){
+  if (vec == nullptr){
+    vec = new std::vector<usNum>();
+  }
+
   usNum index = note_index(note);
   if(index > 9 && index < 16){
-    std::cout << +note << " " << std::endl;
+    vec->push_back(note);
+    for (auto i : *vec){
+      std::cout << +i << " ";
+    }
+    std::cout << std::endl;
     return;
   }else{
-    std::cout << +note << " " << std::endl;
-    if(index < 16){
-      usNum left = get_lneighbor(index);
-      usNum right = get_rneighbor(index);
-      depth_path(get_note(left));
-      depth_path(get_note(right));
-    }
+    vec->push_back(note);
+    usNum left = get_lneighbor(index);
+    usNum left_note = get_note(left);
+    usNum right = get_rneighbor(index);
+    usNum right_note = get_note(right);
+    depth_path(left_note, vec);
+    vec->pop_back();
+    depth_path(right_note, vec);
+    vec->pop_back();
   }
-  return;
 }
 
 /**
@@ -163,5 +175,7 @@ void SchoenTree::print_tree(){
     << +parent_row_[12] << "   " 
     << +parent_row_[13] << "   " 
     << +parent_row_[14] <<  std::endl;
+
+  std::cout << std::endl;
 }
 
