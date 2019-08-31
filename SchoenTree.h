@@ -1,8 +1,9 @@
 #ifndef SchoenTree_H
 #define SchoenTree_H
+#include <array>
 #include <map>
-#include <utility>
 #include <string>
+#include <utility>
 
 typedef unsigned char usNum;
 typedef std::pair<usNum, usNum> schoenPair;
@@ -20,17 +21,17 @@ class SchoenTree{
      * Constructor using an array of values,  0-14, no duplicates
      * @param row array of usNums of len 15
      */
-    SchoenTree(usNum* row);
+    SchoenTree(std::array<usNum, 15>& arr);
 
     /**
      * Returns the note value at a given index
      */
-    usNum get_note(usNum& val);
+    usNum get_note(const usNum& index);
 
     /**
      * Returns the parent row
      */
-    usNum* get_parent_row();
+    std::array<usNum, 15> get_parent_row();
 
     /**
      * Returns the index of the right neighbor for an index of the tree
@@ -63,7 +64,7 @@ class SchoenTree{
     /**
      * Generates map of note values to note value index in parent_row_
      */
-    void generate_map(const usNum* row, usNum size);
+    void generate_map(std::array<usNum, 15>& row);
 
     /**
      * Creates map of all indexes and it's neighbors
@@ -71,8 +72,9 @@ class SchoenTree{
     void generate_nmap();
 
     //void generate_neighbors();
-    
-    usNum parent_row_[15];
+
+
+    std::array<usNum, 15> parent_row_;    
     std::map<usNum, schoenPair> neighbor_map_;
     std::map<usNum, usNum> map_;
 

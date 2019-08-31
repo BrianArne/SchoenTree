@@ -1,16 +1,19 @@
+
+#include <array>
 #include "SchoenTree.h"
 #include <iostream>
 
 typedef unsigned char usNum;
 
 int main(int argc, char * argv[]){
-  unsigned char myArr[] = {1,2,3,4,5,1,2,3,4,5,1,2,3,4,5};
+  std::array<usNum, 15> myArr;
+  myArr.fill(7);
+
   SchoenTree myTree(myArr);
   SchoenTree myTreeTwo;
 
+  //Test Value
   usNum val = 1;
-
-  
   myTreeTwo.print_tree();
   myTreeTwo.depth_path(val);
 

@@ -1,9 +1,11 @@
-#include "SchoenTree.h"
-#include <iostream>
-#include <map>
-#include <stdlib.h>
+#include <array>
 #include <cstring>
 #include <limits>
+#include <map>
+#include <memory>
+#include <iostream>
+#include "SchoenTree.h"
+#include <stdlib.h>
 #include <string>
 #include <vector>
 
@@ -16,10 +18,11 @@ typedef std::pair<usNum, usNum> schoenPair;
  */
 SchoenTree::SchoenTree(){
   srand(time(NULL));
-  usNum p_row[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  std::array<usNum, 15> p_row;
+  p_row.fill(0);
   bool zero = false;
   usNum zVal = 0;
-  for( int i = 0; i < (sizeof(p_row) / sizeof(usNum)); i++){
+  for(int i = 0; i < p_row.size(); i++){
     usNum val = rand() % 15;
     if (!zero){
       zero = true;
@@ -31,23 +34,23 @@ SchoenTree::SchoenTree(){
       i--;
     }
   }
-  std::memcpy(parent_row_, p_row, 15*sizeof(usNum));
-  generate_map(p_row, (usNum)sizeof(p_row)/sizeof(usNum));
+  parent_row_ = p_row;
+  generate_map(p_row);
   generate_nmap();
 }
 
 /**
  * Constructs SchoenTree from supplied parent row
  */
-SchoenTree::SchoenTree(usNum* row){
-  std::memcpy(parent_row_, row, 15 * sizeof(usNum));
+SchoenTree::SchoenTree(std::array<usNum, 15>& arr){
+  parent_row_ = arr;
 }
 
 /**
  * Generates map of note values t note value index in parent_row_
  */
-void SchoenTree::generate_map(const usNum* row, usNum size){
-  for (usNum i = 0; i < size; i++){
+void SchoenTree::generate_map(std::array<usNum, 15>& row){
+  for (auto i : row){
     map_.insert(std::pair<usNum, usNum>(row[i], i));
   }
 }
@@ -59,13 +62,13 @@ void SchoenTree::generate_nmap(){
   schoenPair zero(1, 2);
   schoenPair one(3, 4);
   schoenPair two(4, 5);
-  schoenPair three(6,7);
-  schoenPair four(7,8);
-  schoenPair five(8,9);
-  schoenPair six(10,11);
-  schoenPair seven(11,12);
-  schoenPair eight(12,13);
-  schoenPair nine(13,14);
+  schoenPair three(6, 7);
+  schoenPair four(7, 8);
+  schoenPair five(8, 9);
+  schoenPair six(10, 11);
+  schoenPair seven(11, 12);
+  schoenPair eight(12, 13);
+  schoenPair nine(13, 14);
 
   neighbor_map_.insert(std::pair<usNum, schoenPair>(0, zero));
   neighbor_map_.insert(std::pair<usNum, schoenPair>(1, one));
@@ -80,16 +83,16 @@ void SchoenTree::generate_nmap(){
 }
 
 /**
- * Returns the note value of the index
+ * Returns the note value at a given index 
  */
-usNum SchoenTree::get_note(usNum& val){
-  return parent_row_[val];
+usNum SchoenTree::get_note(const usNum& index){
+  return parent_row_[index];
 }
 
 /**
  * Returns the parent row
  */
-usNum* SchoenTree::get_parent_row(){
+std::array<usNum, 15> SchoenTree::get_parent_row(){
   return parent_row_;
 }
 
@@ -97,9 +100,11 @@ usNum* SchoenTree::get_parent_row(){
  * Generates depth-first traversal from note to leaf notes paths. 
  */
 void SchoenTree::depth_path(usNum& note, 
-                            std::vector<usNum>* vec){
+    std::vector<usNum>* vec){
   if (vec == nullptr){
-    vec = new std::vector<usNum>();
+    std::shared_ptr<std::vector<usNum>> holder = 
+      std::make_shared<std::vector<usNum>>(); 
+    vec = holder.get();
   }
 
   usNum index = note_index(note);
@@ -152,11 +157,11 @@ usNum SchoenTree::note_index(const usNum& note){
 void SchoenTree::print_tree(){
 
   std::cout << "        " 
-     << +parent_row_[0] <<  std::endl;
+    << +parent_row_[0] <<  std::endl;
 
   std::cout << "      " 
-     << +parent_row_[1] << "   " 
-     << +parent_row_[2] << std::endl;
+    << +parent_row_[1] << "   " 
+    << +parent_row_[2] << std::endl;
 
   std::cout << "    " 
     << +parent_row_[3] << "   " 
