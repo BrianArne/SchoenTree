@@ -1,6 +1,7 @@
 #ifndef SchoenTree_H
 #define SchoenTree_H
 #include <array>
+#include <cmath>
 #include <map>
 #include <string>
 #include <utility>
@@ -58,6 +59,16 @@ class SchoenTree{
      */
     void depth_path(usNum& note, 
                     std::vector<usNum>* vec = nullptr);
+    
+    /**
+     * Returns the frequency in hz of a pitch
+     * @param base The base pitch used to generate all notes
+     *    typically 440hz
+     * @param distance The distance, in equal division of the
+     *    octave 16 times, away from the base pitch
+     * @return double Frequency of the pitch desired
+     */
+    double note_frq(const double& base, const double& distance);
     
   private:
 

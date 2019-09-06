@@ -1,4 +1,5 @@
 #include <array>
+#include <cmath>
 #include <cstring>
 #include <limits>
 #include <map>
@@ -128,6 +129,10 @@ void SchoenTree::depth_path(usNum& note,
   }
 }
 
+double SchoenTree::note_frq(const double& base, const double& distance){
+  return base * pow(pow(2., (1./16.)), distance);
+}
+
 /**
  * Returns the index of the right neighbor for an index of the tree
  */
@@ -183,4 +188,3 @@ void SchoenTree::print_tree(){
 
   std::cout << std::endl;
 }
-
